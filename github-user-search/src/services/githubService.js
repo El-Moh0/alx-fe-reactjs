@@ -1,32 +1,31 @@
 import axios from "axios";
 
-const githubApi = axios.create({
-  baseURL: "https://api.github.com",
-  headers: {
-    Authorization: import.meta.env.VITE_APP_GITHUB_API_KEY
-      ? `token ${import.meta.env.VITE_APP_GITHUB_API_KEY}`
-      : "",
-  },
-});
+const BASE_URL = "https://api.github.com";
 
-export const searchUsers = async ({
-  query,
-  location,
-  minRepos,
-  page = 1,
-}) => {
-  let q = query;
+// Advanced search function using GitHub's Search API
+export const fetchAdvancedUsers = async ({ username, location, minRepos, page = 1 }) => {
+  // Build the query string for GitHub Search API
+  let query = "";
+  if (username) query += `${username} in:login `;
+  if (location) query += `location:${location} `;
+  if (minRepos) query += `repos:>=${minRepos} `;
+  
+  const searchUrl = `${BASE_URL}/search/users?q=${encodeURIComponent(query.trim())}`;
 
-  if (location) q += ` location:${location}`;
-  if (minRepos) q += ` repos:>=${minRepos}`;
-
-  const response = await githubApi.get("/search/users", {
+  // Call GitHub Search API
+  const response = await axios.get(searchUrl, {
     params: {
-      q,
-      page,
       per_page: 10,
+      page: page,
+    },
+    headers: {
+      Authorization: `token ${import.meta.env.VITE_APP_GITHUB_API_KEY}`,
     },
   });
 
-  return response.data;
-};
+  // Fetch detailed info for each user
+  const detailedUsers = await Promise.all(
+    response.data.items.map(async (user) => {
+      const userDetails = await axios.get(`${BASE_URL}/users/${user.login}`, {
+        headers: {
+          Authorization: `token ${import.meta.env.VITE_APP_GITHUB_API_KEY}
