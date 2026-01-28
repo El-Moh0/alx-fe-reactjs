@@ -1,16 +1,23 @@
-// src/services/githubService.js
 import axios from "axios";
+import { fetchUserData } from "./githubService";
+import { vi } from "vitest";
 
-const githubApi = axios.create({
-  baseURL: "https://api.github.com",
-  headers: {
-    Authorization: import.meta.env.VITE_APP_GITHUB_API_KEY
-      ? `token ${import.meta.env.VITE_APP_GITHUB_API_KEY}`
-      : "",
-  },
+vi.mock("axios");
+
+describe("fetchUserData", () => {
+  it("calls the correct GitHub API endpoint", async () => {
+    const mockUser = { login: "octocat" };
+
+    axios.get.mockResolvedValueOnce({ data: mockUser });
+
+    const username = "octocat";
+    const result = await fetchUserData(username);
+
+    expect(axios.get).toHaveBeenCalledWith(
+      `https://api.github.com/users/${username}`,
+      expect.any(Object)
+    );
+
+    expect(result).toEqual(mockUser);
+  });
 });
-
-export const searchUsers = async (query) => {
-  const response = await githubApi.get(`/search/users?q=${query}`);
-  return response.data.items;
-};
