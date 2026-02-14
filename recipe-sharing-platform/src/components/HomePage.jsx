@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import recipesData from "../data.json";
 
 function HomePage() {
   const [recipes, setRecipes] = useState([]);
 
   useEffect(() => {
-    // Load data from JSON
     setRecipes(recipesData);
   }, []);
 
@@ -15,7 +15,6 @@ function HomePage() {
         Recipe Sharing Platform
       </h1>
 
-      {/* Grid Layout */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
         {recipes.map((recipe) => (
           <div
@@ -37,9 +36,13 @@ function HomePage() {
                 {recipe.summary}
               </p>
 
-              <button className="mt-4 text-blue-600 font-medium hover:underline">
+              {/* THIS is the important Step 5 change */}
+              <Link
+                to={`/recipe/${recipe.id}`}
+                className="mt-4 inline-block text-blue-600 font-medium hover:underline"
+              >
                 View Recipe →
-              </button>
+              </Link>
             </div>
           </div>
         ))}
