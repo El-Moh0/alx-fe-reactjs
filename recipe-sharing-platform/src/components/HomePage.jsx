@@ -15,46 +15,36 @@ function HomePage() {
         Recipe Sharing Platform
       </h1>
 
+      {/* Add Recipe Button */}
       <div className="text-center mb-6">
-  <Link
-    to="/add"
-    className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
-  >
-    + Add New Recipe
-  </Link>
-</div>
+        <Link
+          to="/add"
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+        >
+          + Add New Recipe
+        </Link>
+      </div>
 
-
+      {/* Recipe Grid */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
         {recipes.map((recipe) => (
-          <div
+          <Link
+            to={`/recipe/${recipe.id}`}
             key={recipe.id}
-            className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl hover:scale-105 transition duration-300"
+            className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl hover:scale-105 transition duration-300 block"
           >
             <img
               src={recipe.image}
               alt={recipe.title}
               className="w-full h-40 object-cover"
             />
-
             <div className="p-4">
               <h2 className="text-xl font-semibold mb-2">
                 {recipe.title}
               </h2>
-
-              <p className="text-gray-600 text-sm">
-                {recipe.summary}
-              </p>
-
-              {/* THIS is the important Step 5 change */}
-              <Link
-                to={`/recipe/${recipe.id}`}
-                className="mt-4 inline-block text-blue-600 font-medium hover:underline"
-              >
-                View Recipe →
-              </Link>
+              <p className="text-gray-600 text-sm">{recipe.summary}</p>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </div>
