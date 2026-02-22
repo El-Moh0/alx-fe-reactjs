@@ -4,8 +4,13 @@ export default function Profile() {
   return (
     <div>
       <h1>Profile Page</h1>
-      <Link to="details">Profile Details</Link> |{' '}
-      <Link to="settings">Profile Settings</Link>
+
+      <nav>
+        <Link to="details">Details</Link> |{' '}
+        <Link to="settings">Settings</Link>
+      </nav>
+
+      {/* Nested routes will render here */}
       <Outlet />
     </div>
   );
