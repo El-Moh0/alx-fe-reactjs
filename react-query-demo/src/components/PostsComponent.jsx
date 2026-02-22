@@ -1,14 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
 
 const fetchPosts = async () => {
-  const response = await fetch(
-    'https://jsonplaceholder.typicode.com/posts'
-  )
-
+  const response = await fetch('https://jsonplaceholder.typicode.com/posts')
   if (!response.ok) {
     throw new Error('Failed to fetch posts')
   }
-
   return response.json()
 }
 
@@ -23,7 +19,12 @@ export default function PostsComponent() {
   } = useQuery({
     queryKey: ['posts'],
     queryFn: fetchPosts,
-    cacheTime: 1000 * 60 * 5, // keep cache 5 minutes
+
+    // Advanced options
+    staleTime: 1000 * 60 * 2,            // 2 minutes fresh data
+    cacheTime: 1000 * 60 * 5,            // 5 minutes in cache
+    refetchOnWindowFocus: false,         // don't refetch when switching tabs
+    keepPreviousData: true,              // useful if you implement pagination
   })
 
   if (isLoading) return <p>Loading posts...</p>
